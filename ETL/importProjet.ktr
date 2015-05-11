@@ -97,41 +97,201 @@
     </attributes>
   </connection>
   <connection>
-    <name>ImportProject</name>
+    <name>ExportData</name>
     <server>localhost</server>
-    <type>MSSQLNATIVE</type>
+    <type>MYSQL</type>
     <access>Native</access>
-    <database>test</database>
-    <port>1433</port>
-    <username>Keupaon-PC&#x5c;Keupaon</username>
-    <password>Encrypted 2be98afc86aa7f2e4a4168871dbc5bbdf</password>
+    <database>datawarehouse_accidents</database>
+    <port>3306</port>
+    <username/>
+    <password>Encrypted </password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
     <attributes>
+      <attribute><code>EXTRA_OPTION_MYSQL.defaultFetchSize</code><attribute>500</attribute></attribute>
+      <attribute><code>EXTRA_OPTION_MYSQL.useCursorFetch</code><attribute>true</attribute></attribute>
       <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
       <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
-      <attribute><code>MSSQLUseIntegratedSecurity</code><attribute>true</attribute></attribute>
-      <attribute><code>MSSQL_DOUBLE_DECIMAL_SEPARATOR</code><attribute>N</attribute></attribute>
-      <attribute><code>PORT_NUMBER</code><attribute>1433</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>3306</attribute></attribute>
       <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>N</attribute></attribute>
       <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>STREAM_RESULTS</code><attribute>Y</attribute></attribute>
       <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
       <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
       <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
     </attributes>
   </connection>
   <order>
-  <hop> <from>ExtractionAccidents</from><to>sort by com</to><enabled>Y</enabled> </hop>
   <hop> <from>ExtractionCP</from><to>sort CP by com</to><enabled>Y</enabled> </hop>
   <hop> <from>sort by com</from><to>innerJoin Location</to><enabled>Y</enabled> </hop>
   <hop> <from>sort CP by com</from><to>innerJoin Location</to><enabled>Y</enabled> </hop>
-  <hop> <from>ExtractionAccidents</from><to>Tri lignes</to><enabled>Y</enabled> </hop>
   <hop> <from>ExtractionVehicule</from><to>sort vehicule by numac</to><enabled>Y</enabled> </hop>
   <hop> <from>sort vehicule by numac</from><to>innerJoinVehicule</to><enabled>Y</enabled> </hop>
-  <hop> <from>Tri lignes</from><to>innerJoinVehicule</to><enabled>Y</enabled> </hop>
+  <hop> <from>sort numac</from><to>innerJoinVehicule</to><enabled>Y</enabled> </hop>
+  <hop> <from>innerJoinVehicule</from><to>innerJoinGlobal</to><enabled>Y</enabled> </hop>
+  <hop> <from>innerJoin Location</from><to>innerJoinGlobal</to><enabled>Y</enabled> </hop>
+  <hop> <from>innerJoin Location</from><to>ExportLocalisation</to><enabled>Y</enabled> </hop>
+  <hop> <from>innerJoinGlobal</from><to>InsertVehicules</to><enabled>Y</enabled> </hop>
+  <hop> <from>Concat com</from><to>sort numac</to><enabled>N</enabled> </hop>
+  <hop> <from>Concat com</from><to>sort by com</to><enabled>Y</enabled> </hop>
+  <hop> <from>ExtractionAccidents</from><to>del col</to><enabled>Y</enabled> </hop>
+  <hop> <from>del col</from><to>Concat com</to><enabled>Y</enabled> </hop>
   </order>
+  <step>
+    <name>Concat com</name>
+    <type>ConcatFields</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <separator/>
+    <enclosure>&#x22;</enclosure>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>file</name>
+      <is_command>N</is_command>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>Y</do_not_open_new_file_init>
+      <extention>txt</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery>0</splitevery>
+    </file>
+    <fields>
+      <field>
+        <name>com</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>dep</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>none</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <ConcatFields>
+<targetFieldName>comm</targetFieldName>
+<targetFieldLength>5</targetFieldLength>
+<removeSelectedFields>N</removeSelectedFields>
+    </ConcatFields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>239</xloc>
+      <yloc>209</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>ExportLocalisation</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>ExportData</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>Y</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO ville&#x28;&#x27;com&#x27;,&#x27;cp&#x27;,&#x27;dep&#x27;&#x29;&#xd;&#xa;SELECT &#x24;com,&#x24;cp,&#x24;dep,&#xd;&#xa;GROUP BY &#x24;com,&#x24;cp&#x3b;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+       <argument><name>org</name></argument>
+       <argument><name>lum</name></argument>
+       <argument><name>agg</name></argument>
+       <argument><name>int</name></argument>
+       <argument><name>atm</name></argument>
+       <argument><name>col</name></argument>
+       <argument><name>com</name></argument>
+       <argument><name>dep</name></argument>
+       <argument><name>catr</name></argument>
+       <argument><name>infra</name></argument>
+       <argument><name>voie</name></argument>
+       <argument><name>v1</name></argument>
+       <argument><name>v2</name></argument>
+       <argument><name>circ</name></argument>
+       <argument><name>nbv</name></argument>
+       <argument><name>pr</name></argument>
+       <argument><name>pr1</name></argument>
+       <argument><name>vosp</name></argument>
+       <argument><name>prof</name></argument>
+       <argument><name>plan</name></argument>
+       <argument><name>situ</name></argument>
+       <argument><name>ttue</name></argument>
+       <argument><name>tbg</name></argument>
+       <argument><name>tbl</name></argument>
+       <argument><name>tindm</name></argument>
+       <argument><name>typenumero</name></argument>
+       <argument><name>numero</name></argument>
+       <argument><name>distancemetre</name></argument>
+       <argument><name>libellevoie</name></argument>
+       <argument><name>coderivoli</name></argument>
+       <argument><name>grav</name></argument>
+       <argument><name>gps</name></argument>
+       <argument><name>lat</name></argument>
+       <argument><name>long</name></argument>
+       <argument><name>adr</name></argument>
+       <argument><name>numac</name></argument>
+       <argument><name>com_1</name></argument>
+       <argument><name>ville</name></argument>
+       <argument><name>cp</name></argument>
+       <argument><name>lib</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>570</xloc>
+      <yloc>282</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
   <step>
     <name>ExtractionAccidents</name>
     <type>CsvInput</type>
@@ -158,6 +318,17 @@
     <encoding/>
     <fields>
       <field>
+        <name>org</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
         <name>lum</name>
         <type>String</type>
         <format/>
@@ -170,6 +341,17 @@
       </field>
       <field>
         <name>agg</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>int</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -235,6 +417,50 @@
         <trim_type>none</trim_type>
       </field>
       <field>
+        <name>infra</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>voie</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>v1</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>v2</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
         <name>circ</name>
         <type>String</type>
         <format/>
@@ -246,7 +472,73 @@
         <trim_type>none</trim_type>
       </field>
       <field>
+        <name>nbv</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>pr</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>pr1</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>vosp</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
         <name>prof</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>plan</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>situ</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -301,7 +593,106 @@
         <trim_type>none</trim_type>
       </field>
       <field>
+        <name>typenumero</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>numero</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>distancemetre</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>libellevoie</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>coderivoli</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
         <name>grav</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>gps</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>lat</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>long</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>adr</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -325,8 +716,8 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>85</xloc>
-      <yloc>232</yloc>
+      <xloc>44</xloc>
+      <yloc>209</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -403,8 +794,8 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>81</xloc>
-      <yloc>445</yloc>
+      <xloc>230</xloc>
+      <yloc>444</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -437,96 +828,436 @@
       <field>
         <name>numac</name>
         <type>String</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>&#xa0;</group>
-        <length>15</length>
-        <precision>0</precision>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>catv</name>
         <type>String</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>&#xa0;</group>
-        <length>15</length>
-        <precision>0</precision>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>vsp</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>app</name>
         <type>String</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>&#xa0;</group>
-        <length>15</length>
-        <precision>0</precision>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>ass</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>anmc</name>
         <type>String</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>&#xa0;</group>
-        <length>15</length>
-        <precision>0</precision>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>momc</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>tuev</name>
         <type>String</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>&#xa0;</group>
-        <length>15</length>
-        <precision>0</precision>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>bgv</name>
         <type>String</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>&#xa0;</group>
-        <length>15</length>
-        <precision>0</precision>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>blv</name>
         <type>String</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>&#xa0;</group>
-        <length>15</length>
-        <precision>0</precision>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>indv</name>
         <type>String</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>&#xa0;</group>
-        <length>15</length>
-        <precision>0</precision>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>82</xloc>
-      <yloc>45</yloc>
+      <xloc>233</xloc>
+      <yloc>7</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>InsertVehicules</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>ExportData</connection>
+    <execute_each_row>N</execute_each_row>
+    <single_statement>Y</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>INSERT INTO accidents&#x28;&#x27;numAcc&#x27;,&#x27;com&#x27;,&#x27;catr&#x27;,&#x27;catv&#x27;,&#x27;&#x27;&#x29;&#xd;&#xa;SELECT &#x24;numac,&#x24;com,&#x24;catr,&#x24;catv,SUM&#x28;TO_NUMBER&#x28;&#x24;ttue&#x29;&#x29;,SUM&#x28;TO_NUMBER&#x28;&#x24;tbg&#x29;&#x29;,SUM&#x28;TO_NUMBER&#x28;&#x24;tbl&#x29;&#x29;,SUM&#x28;TO_NUMBER&#x28;&#x24;tindm&#x29;&#x29;,COUNT&#x28;&#x2a;&#x29;&#xd;&#xa;GROUP BY &#x24;numac&#x3b;&#xd;&#xa;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+       <argument><name>numac</name></argument>
+       <argument><name>catv</name></argument>
+       <argument><name>vsp</name></argument>
+       <argument><name>app</name></argument>
+       <argument><name>ass</name></argument>
+       <argument><name>anmc</name></argument>
+       <argument><name>momc</name></argument>
+       <argument><name>tuev</name></argument>
+       <argument><name>bgv</name></argument>
+       <argument><name>blv</name></argument>
+       <argument><name>indv</name></argument>
+       <argument><name>org</name></argument>
+       <argument><name>lum</name></argument>
+       <argument><name>agg</name></argument>
+       <argument><name>int</name></argument>
+       <argument><name>atm</name></argument>
+       <argument><name>col</name></argument>
+       <argument><name>com</name></argument>
+       <argument><name>dep</name></argument>
+       <argument><name>catr</name></argument>
+       <argument><name>infra</name></argument>
+       <argument><name>voie</name></argument>
+       <argument><name>v1</name></argument>
+       <argument><name>v2</name></argument>
+       <argument><name>circ</name></argument>
+       <argument><name>nbv</name></argument>
+       <argument><name>pr</name></argument>
+       <argument><name>pr1</name></argument>
+       <argument><name>vosp</name></argument>
+       <argument><name>prof</name></argument>
+       <argument><name>plan</name></argument>
+       <argument><name>situ</name></argument>
+       <argument><name>ttue</name></argument>
+       <argument><name>tbg</name></argument>
+       <argument><name>tbl</name></argument>
+       <argument><name>tindm</name></argument>
+       <argument><name>typenumero</name></argument>
+       <argument><name>numero</name></argument>
+       <argument><name>distancemetre</name></argument>
+       <argument><name>libellevoie</name></argument>
+       <argument><name>coderivoli</name></argument>
+       <argument><name>grav</name></argument>
+       <argument><name>gps</name></argument>
+       <argument><name>lat</name></argument>
+       <argument><name>long</name></argument>
+       <argument><name>adr</name></argument>
+       <argument><name>numac_1</name></argument>
+       <argument><name>org_1</name></argument>
+       <argument><name>lum_1</name></argument>
+       <argument><name>agg_1</name></argument>
+       <argument><name>int_1</name></argument>
+       <argument><name>atm_1</name></argument>
+       <argument><name>col_1</name></argument>
+       <argument><name>com_1</name></argument>
+       <argument><name>dep_1</name></argument>
+       <argument><name>catr_1</name></argument>
+       <argument><name>infra_1</name></argument>
+       <argument><name>voie_1</name></argument>
+       <argument><name>v1_1</name></argument>
+       <argument><name>v2_1</name></argument>
+       <argument><name>circ_1</name></argument>
+       <argument><name>nbv_1</name></argument>
+       <argument><name>pr_1</name></argument>
+       <argument><name>pr1_1</name></argument>
+       <argument><name>vosp_1</name></argument>
+       <argument><name>prof_1</name></argument>
+       <argument><name>plan_1</name></argument>
+       <argument><name>situ_1</name></argument>
+       <argument><name>ttue_1</name></argument>
+       <argument><name>tbg_1</name></argument>
+       <argument><name>tbl_1</name></argument>
+       <argument><name>tindm_1</name></argument>
+       <argument><name>typenumero_1</name></argument>
+       <argument><name>numero_1</name></argument>
+       <argument><name>distancemetre_1</name></argument>
+       <argument><name>libellevoie_1</name></argument>
+       <argument><name>coderivoli_1</name></argument>
+       <argument><name>grav_1</name></argument>
+       <argument><name>gps_1</name></argument>
+       <argument><name>lat_1</name></argument>
+       <argument><name>long_1</name></argument>
+       <argument><name>adr_1</name></argument>
+       <argument><name>numac_2</name></argument>
+       <argument><name>com_1_1</name></argument>
+       <argument><name>ville</name></argument>
+       <argument><name>cp</name></argument>
+       <argument><name>lib</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>643</xloc>
+      <yloc>197</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>del col</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>      <field>        <name>org</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>lum</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>agg</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>int</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>atm</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>col</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>com</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>dep</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>catr</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>infra</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>voie</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>v1</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>v2</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>circ</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>nbv</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>pr</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>pr1</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>vosp</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>prof</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>plan</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>situ</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>ttue</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>tbg</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>tbl</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>tindm</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>typenumero</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>numero</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>distancemetre</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>libellevoie</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>coderivoli</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>grav</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>gps</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>lat</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>long</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>adr</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>numac</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>        <select_unspecified>N</select_unspecified>
+      <remove>        <name>org</name>
+      </remove>      <remove>        <name>int</name>
+      </remove>      <remove>        <name>col</name>
+      </remove>      <remove>        <name>infra</name>
+      </remove>      <remove>        <name>voie</name>
+      </remove>      <remove>        <name>v1</name>
+      </remove>      <remove>        <name>v2</name>
+      </remove>      <remove>        <name>circ</name>
+      </remove>      <remove>        <name>nbv</name>
+      </remove>      <remove>        <name>pr</name>
+      </remove>      <remove>        <name>pr1</name>
+      </remove>      <remove>        <name>vosp</name>
+      </remove>      <remove>        <name>prof</name>
+      </remove>      <remove>        <name>plan</name>
+      </remove>      <remove>        <name>situ</name>
+      </remove>      <remove>        <name>typenumero</name>
+      </remove>      <remove>        <name>numero</name>
+      </remove>      <remove>        <name>distancemetre</name>
+      </remove>      <remove>        <name>libellevoie</name>
+      </remove>      <remove>        <name>coderivoli</name>
+      </remove>      <remove>        <name>gps</name>
+      </remove>      <remove>        <name>lat</name>
+      </remove>      <remove>        <name>long</name>
+      </remove>      <remove>        <name>adr</name>
+      </remove>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>149</xloc>
+      <yloc>209</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -535,7 +1266,7 @@
     <name>innerJoin Location</name>
     <type>MergeJoin</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
          <partitioning>
@@ -546,15 +1277,71 @@
 <step1>sort by com</step1>
 <step2>sort CP by com</step2>
     <keys_1>
-      <key>com</key>
+      <key>comm</key>
     </keys_1>
     <keys_2>
       <key>com</key>
     </keys_2>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>398</xloc>
-      <yloc>322</yloc>
+      <xloc>443</xloc>
+      <yloc>283</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>innerJoinGlobal</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<join_type>INNER</join_type>
+<step1>innerJoinVehicule</step1>
+<step2>innerJoin Location</step2>
+    <keys_1>
+      <key>numac</key>
+    </keys_1>
+    <keys_2>
+      <key>numac</key>
+    </keys_2>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>523</xloc>
+      <yloc>199</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>innerJoinVehicule</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<join_type>INNER</join_type>
+<step1>sort vehicule by numac</step1>
+<step2>sort numac</step2>
+    <keys_1>
+      <key>numac</key>
+    </keys_1>
+    <keys_2>
+      <key>numac</key>
+    </keys_2>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>446</xloc>
+      <yloc>142</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -587,8 +1374,8 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>276</xloc>
-      <yloc>388</yloc>
+      <xloc>358</xloc>
+      <yloc>372</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -613,7 +1400,7 @@
       <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>com</name>
+        <name>comm</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <presorted>N</presorted>
@@ -621,14 +1408,14 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>277</xloc>
-      <yloc>284</yloc>
+      <xloc>341</xloc>
+      <yloc>294</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
 
   <step>
-    <name>Tri lignes</name>
+    <name>sort numac</name>
     <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -655,8 +1442,8 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>278</xloc>
-      <yloc>170</yloc>
+      <xloc>346</xloc>
+      <yloc>143</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -689,36 +1476,8 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>276</xloc>
-      <yloc>61</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>innerJoinVehicule</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-<join_type>INNER</join_type>
-<step1>sort vehicule by numac</step1>
-<step2>Tri lignes</step2>
-    <keys_1>
-      <key>numac</key>
-    </keys_1>
-    <keys_2>
-      <key>numac</key>
-    </keys_2>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>395</xloc>
-      <yloc>112</yloc>
+      <xloc>349</xloc>
+      <yloc>41</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
