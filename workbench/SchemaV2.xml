@@ -1,0 +1,42 @@
+<Schema name="New Schema1">
+  <Cube name="accident" visible="true" cache="true" enabled="true">
+    <Table name="accident" alias="">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="com" name="localisation">
+      <Hierarchy name="ville" visible="true" hasAll="true" primaryKey="com">
+        <Table name="ville" alias="">
+        </Table>
+        <Level name="ville" visible="true" column="com" uniqueMembers="false">
+        </Level>
+      </Hierarchy>
+      <Hierarchy name="dpt" visible="true" hasAll="true" primaryKey="dpt">
+        <Table name="ville" alias="">
+        </Table>
+        <Level name="dpt" visible="true" column="dpt" uniqueMembers="false">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="catr" name="route">
+      <Hierarchy name="route" visible="true" hasAll="true" primaryKey="catr">
+        <Table name="route" alias="">
+        </Table>
+        <Level name="route" visible="true" column="catr" uniqueMembers="false">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="catv" name="typeV">
+      <Hierarchy name="vehicule" visible="true" hasAll="true">
+        <Table name="vehicule" alias="">
+        </Table>
+        <Level name="vehicule" visible="true" column="catv" uniqueMembers="false">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="BG" column="nbBlesseGrave" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="BL" column="nbBlesseLeger" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="MORT" column="nbMort" aggregator="sum" visible="true">
+    </Measure>
+  </Cube>
+</Schema>
